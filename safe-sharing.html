@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Safe Sharing - MindBridge</title>
+  <link rel="stylesheet" href="style/safe-sharing.css">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav>
+    <div class="logo">
+      <img src="image/newlogo.PNG" alt="MindBridge" />
+    </div>
+    <div class="menu-toggle" onclick="toggleMenu()" aria-label="Toggle navigation menu" role="button" tabindex="0">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+    <ul id="nav-menu">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="#features">Features</a></li>
+      <li><a href="stories.html">Stories</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="login.html">Login</a></li>
+      <li><a href="g.html.html">Therapists</a></li>
+    </ul>
+  </nav>
+
+  <!-- Safe Sharing Container -->
+  <div class="container">
+    <h2>Safe Sharing Space</h2>
+
+    <label for="story">Share Your Story:</label>
+    <textarea id="story" placeholder="Write about your experience..."></textarea>
+
+    <label for="privacy">
+      <input type="checkbox" id="privacy" />
+      Share anonymously
+    </label>
+
+    <label for="video">Upload Video (Optional):</label>
+    <input type="file" id="video" accept="video/*" />
+
+    <label for="audio">Upload Voice (Optional):</label>
+    <input type="file" id="audio" accept="audio/*" />
+
+    <button onclick="submitForm()">Share Now</button>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    &copy; 2025 MindBridge. Empowering every story.
+  </footer>
+
+  <!-- JavaScript -->
+  <script>
+    function toggleMenu() {
+      const menu = document.getElementById("nav-menu");
+      menu.classList.toggle("show");
+    }
+
+    function submitForm() {
+      const story = document.getElementById("story").value.trim();
+      const anonymous = document.getElementById("privacy").checked;
+
+      if (!story) {
+        alert("Please write your story before submitting.");
+        return;
+      }
+
+      alert("Thank you for sharing your story " + (anonymous ? "anonymously." : "with your identity."));
+      document.getElementById("story").value = '';
+      document.getElementById("privacy").checked = false;
+    }
+  </script>
+
+</body>
+</html>

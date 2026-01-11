@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Contact Us</title>
+  <link rel="stylesheet" href="style/contact.css">
+  
+</head>
+<body>
+    <nav>
+        <div class="logo">
+      <img src="image/newlogo.PNG" alt="MindBridge">
+    </div>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="#features">Features</a></li>
+      <li><a href="stories.html">Stories</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="login.html">Login</a></li>
+      <li><a href="g.html.html">Therapists</a></li>
+    </ul>
+  </nav>
+
+<div class="contact-container">
+  <div class="contact-box">
+    <h2>Contact Us</h2>
+    <div class="contact-form">
+      <form id="contactForm" onsubmit="return validateForm()">
+        <div>
+          <input type="text" class="form-control" placeholder="First Name" id="firstName" />
+          <input type="text" class="form-control" placeholder="Last Name" id="lastName" />
+        </div>
+        <div>
+          <input type="email" class="form-control" placeholder="E-mail" id="email" />
+          <input type="text" class="form-control" placeholder="Phone (Required)" id="phone" />
+        </div>
+        <div>
+          <input type="date" class="form-control" id="dob" />
+          <select class="form-control" id="gender">
+            <option value="">Select Gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <textarea rows="4" placeholder="Message (Required)" class="form-control" id="message"></textarea>
+        <textarea class="story-box" placeholder="Write your community story here..." id="story"></textarea>
+        <div class="form-error" id="formError"></div>
+        <input type="submit" class="send-btn" value="Send Message" />
+      </form>
+    </div>
+  </div>
+
+  <!-- Embedded Google Map -->
+  <div class="map-container">
+    <iframe
+      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3532.3453716636784!2d85.31915441540767!3d27.70788593121554!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39eb1909c52ec2f1%3A0xfaa492c31dc1f2ed!2sKathmandu%2C%20Nepal!5e0!3m2!1sen!2snp!4v1718100000000!5m2!1sen!2snp"
+      allowfullscreen=""
+      loading="lazy"
+      referrerpolicy="no-referrer-when-downgrade">
+    </iframe>
+  </div>
+</div>
+
+<script>
+  function validateForm() {
+    const firstName = document.getElementById("firstName").value.trim();
+    const lastName = document.getElementById("lastName").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const phone = document.getElementById("phone").value.trim();
+    const dob = document.getElementById("dob").value;
+    const gender = document.getElementById("gender").value;
+    const message = document.getElementById("message").value.trim();
+    const errorEl = document.getElementById("formError");
+
+    errorEl.textContent = "";
+
+    if (!firstName || !lastName || !email || !phone || !dob || !gender || !message) {
+      errorEl.textContent = "Please fill all required fields including phone and message.";
+      return false;
+    }
+
+    const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,}$/;
+      const phonePattern = /^[0-9]{7,15}$/;
+
+    if (!email.match(emailPattern)) {
+      errorEl.textContent = "Invalid email format.";
+      return false;
+    }
+
+    if (!phone.match(phonePattern)) {
+      errorEl.textContent = "Phone number must be 9 to 10 digits.";
+      return false;
+    }
+
+    alert("Form submitted successfully!");
+    return true;
+  }
+</script>
+
+</body>
+</html>

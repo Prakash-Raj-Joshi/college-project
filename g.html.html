@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MindBridge - Therapist Gallery</title>
+  <link rel="stylesheet" href="style/g.css">
+
+</head>
+<body>
+
+  <nav>
+    <div class="logo">
+      <img src="image/newlogo.PNG" alt="MindBridge">
+    </div>
+
+    <div class="menu-toggle" onclick="toggleMenu()">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+
+    <ul id="navLinks">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="#features">Features</a></li>
+      <li><a href="stories.html">Stories</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="login.html">Login</a></li>
+      <li><a href="g.html.html">Therapists</a></li>
+    </ul>
+  </nav>
+
+  <h1>MINDBRIDGE THERAPISTS</h1>
+
+  <div class="gallery">
+    <div class="card">
+      <img src="image/pexels-cedric-fauntleroy-4270371.jpg" alt="Therapist 1">
+      <div class="caption">Mental Health Professional</div>
+      <div class="name">Dr. Suman K.</div>
+      <div class="button-wrapper">
+        <a href="appointment.html">Appointment</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="image/pexels-gustavo-fring-4173251.jpg" alt="Therapist 2">
+      <div class="caption">Psychiatrist</div>
+      <div class="name">Dr. Neha R.</div>
+      <div class="button-wrapper">
+        <a href="appointment.html">Appointment</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="image/22.jpg" alt="Therapist 3">
+      <div class="caption">Counselor</div>
+      <div class="name">Mr. Anil P.</div>
+      <div class="button-wrapper">
+        <a href="appointment.html">Appointment</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="image/11.jpg" alt="Therapist 4">
+      <div class="caption">Therapist</div>
+      <div class="name">Ms. Rina T.</div>
+      <div class="button-wrapper">
+        <a href="appointment.html">Appointment</a>
+      </div>
+    </div>
+    
+    <!-- Add more cards similarly -->
+  </div>
+
+  <script>
+    function toggleMenu() {
+      const navLinks = document.getElementById('navLinks');
+      navLinks.classList.toggle('show');
+    }
+  </script>
+
+</body>
+</html>

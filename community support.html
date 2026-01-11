@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MindBridge Community Support</title>
+  <link rel="stylesheet" href="community.css">
+  <style>
+    :root {
+      --bg-color: #f5f7fa;
+      --text-color: #1a1a1a;
+      --card-bg: #ffffff;
+      --shadow: rgba(0, 0, 0, 0.1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      min-height: 100vh;
+    }
+
+    header {
+      padding: 40px 20px 20px 20px;
+      text-align: center;
+      background: linear-gradient(120deg, #6a11cb, #2575fc);
+      color: white;
+    }
+
+    header h1 {
+      font-size: 2rem;
+    }
+
+    .container {
+      padding: 40px 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 30px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background-color: var(--card-bg);
+      box-shadow: 0 8px 20px var(--shadow);
+      border-radius: 12px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.3s ease;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+    }
+
+    .card img {
+      width: 100%;
+      height: 120px;
+      object-fit: contain;
+      margin-bottom: 15px;
+      border-radius: 6px;
+      background: white;
+    }
+
+    .card h2 {
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+    }
+
+    .card p {
+      font-size: 0.95rem;
+      flex-grow: 1;
+      margin-bottom: 10px;
+    }
+
+    .contact {
+      font-weight: bold;
+      margin-bottom: 10px;
+      font-size: 0.95rem;
+    }
+
+    .see-more {
+      padding: 8px 16px;
+      background-color: #2575fc;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      text-align: center;
+      width: fit-content;
+      align-self: flex-start;
+      transition-duration: 0.3s;
+    }
+
+    .see-more:hover {
+      background-color: #1a5de5;
+    }
+
+    @media (max-width: 600px) {
+      header h1 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>MindBridge Community Support</h1>
+  </header>
+
+  <div class="container">
+
+    <a href="https://www.dbsalliance.org" class="card" target="_blank">
+      <img src="image/dbsa.png" alt="DBSA Logo">
+      <h2>Depression and Bipolar Support Alliance (DBSA)</h2>
+      <p>Provides support and resources for individuals with mood disorders.</p>
+      <div class="contact">Contact: +1-800-826-3632</div>
+      <button class="see-more">See More</button>
+    </a>
+
+    <a href="https://adaa.org" class="card" target="_blank">
+      <img src="image/adaa.jfif" alt="ADAA Logo">
+      <h2>Anxiety and Depression Association of America (ADAA)</h2>
+      <p>Offers resources and information on anxiety, depression, and related disorders.</p>
+      <div class="contact">Contact: +1-240-485-1001</div>
+      <button class="see-more">See More</button>
+    </a>
+
+    <a href="https://wfmh.global" class="card" target="_blank">
+      <img src="image/wfmh.png" alt="WFMH Logo">
+      <h2>World Federation for Mental Health (WFMH)</h2>
+      <p>Acts as a global advocate for mental health, connecting global stakeholders.</p>
+      <div class="contact">Contact: +1-703-519-6990</div>
+      <button class="see-more">See More</button>
+    </a>
+
+    <a href="https://www.mhanational.org" class="card" target="_blank">
+      <img src="image/mha.png" alt="MHA Logo">
+      <h2>Mental Health America (MHA)</h2>
+      <p>Offers community-based education, advocacy, and support.</p>
+      <div class="contact">Contact: +1-800-969-6642</div>
+      <button class="see-more">See More</button>
+    </a>
+
+    <a href="https://maitinepal.org" class="card" target="_blank">
+      <img src="image/maiti nepal.jfif" alt="Maiti Nepal Logo">
+      <h2>Maiti Nepal</h2>
+      <p>Helps victims of human trafficking with safe homes and rehabilitation.</p>
+      <div class="contact">Contact: +977-1-4492904</div>
+      <button class="see-more">See More</button>
+    </a>
+
+    <a href="https://www.nrcs.org" class="card" target="_blank">
+      <img src="image/red cross nepal.png" alt="Nepal Red Cross Logo">
+      <h2>Nepal Red Cross Society</h2>
+      <p>Provides disaster relief, healthcare services, and community support.</p>
+      <div class="contact">Contact: +977-1-4270650</div>
+      <button class="see-more">See More</button>
+    </a>
+
+    <a href="https://cmcnepal.org.np" class="card" target="_blank">
+      <img src="image/cmc nepal.jfif" alt="CMC Nepal Logo">
+      <h2>CMC-Nepal</h2>
+      <p>Works on mental health, psychosocial support, and disaster response.</p>
+      <div class="contact">Contact: +977-1-5528052</div>
+      <button class="see-more">See More</button>
+    </a>
+
+    <a href="https://www.facebook.com/HeviLGBTI/" class="card" target="_blank">
+      <img src="image/lgbti.png" alt="HEVI LGBTI+ Logo">
+      <h2>HEVI LGBTI+ Association</h2>
+      <p>This organization provides legal support and peer counseling to LGBTQ+ individuals.</p>
+      <div class="contact">Contact: +90-212-123-4567</div>
+      <button class="see-more">See More</button>
+    </a>
+
+  </div>
+
+</body>
+</html>
