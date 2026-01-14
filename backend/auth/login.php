@@ -1,22 +1,39 @@
 <?php
 require_once "../config/db.php";
+session_start();
 
-$email = $_POST['email'];
+if ($_SERVER["REQUEST_METHOD"] !== "POST") {
+    header("Location: /mindbridge/backend/dashboard.php");
+
+
+    exit();
+}
+
+$email = trim($_POST['email']);
 $password = $_POST['password'];
 
-// check user exists
-$query = "SELECT * FROM users WHERE email = '$email' LIMIT 1";
-$result = mysqli_query($conn, $query);
+// Check user exists
+$query = "SELECT * FROM users WHERE email = ? LIMIT 1";
+$stmt = mysqli_prepare($conn, $query);
+mysqli_stmt_bind_param($stmt, "s", $email);
+mysqli_stmt_execute($stmt);
 
-if (mysqli_num_rows($result) === 1) {
-    $user = mysqli_fetch_assoc($result);
+$result = mysqli_stmt_get_result($stmt);
 
-    // verify password
+if ($user = mysqli_fetch_assoc($result)) {
+
     if (password_verify($password, $user['password'])) {
-        echo "Login successful";
+
+        $_SESSION['user_id']   = $user['id'];
+        $_SESSION['user_name'] = $user['name'];
+
+        header("Location: ../dashboard.php");
+        exit();
+
     } else {
         echo "Invalid password";
     }
+
 } else {
     echo "User not found";
 }

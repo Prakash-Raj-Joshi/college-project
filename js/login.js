@@ -1,3 +1,4 @@
+/*
 let savedUser = {};
 
 function toggleForm(formType) {
@@ -50,3 +51,4 @@ function showPopup(message) {
     popup.classList.add('hidden');
   }, 2000);
 }
+*/
