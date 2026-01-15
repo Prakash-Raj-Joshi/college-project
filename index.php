@@ -1,3 +1,12 @@
+<?php
+session_start();
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.html");
+    exit();
+}
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26,6 +35,8 @@
       <li><a href="login.html">Login</a></li>
       <li><a href="g.html.html">Therapists</a></li>
     </ul>
+    <a href="backend/auth/logout.php">Logout</a>
+
   </nav>
 
   <!-- HEADER -->
