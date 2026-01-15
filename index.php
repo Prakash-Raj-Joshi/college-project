@@ -1,11 +1,14 @@
 <?php
 session_start();
+
+// 🔒 Protect page
 if (!isset($_SESSION['user_id'])) {
-    header("Location: login.html");
+    header("Location: login.php"); // FIXED (was login.html ❌)
     exit();
 }
-?>
 
+require "backend/config/db.php";
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -17,102 +20,109 @@ if (!isset($_SESSION['user_id'])) {
 </head>
 <body>
 
-  <!-- NAVIGATION -->
-  <nav>
-    <div class="logo">
-      <img src="image/newlogo.PNG" alt="MindBridge">
-    </div>
-    <div class="menu-toggle" onclick="toggleMenu()" aria-label="Toggle navigation menu" role="button" tabindex="0">
-      <span></span>
-      <span></span>
-      <span></span>
-    </div>
-    <ul id="nav-menu">
-      <li><a href="index.html">Home</a></li>
-      <li><a href="#features">Features</a></li>
-      <li><a href="stories.html">Stories</a></li>
-      <li><a href="contact.html">Contact</a></li>
-      <li><a href="login.html">Login</a></li>
-      <li><a href="g.html.html">Therapists</a></li>
-    </ul>
-    <a href="backend/auth/logout.php">Logout</a>
+<!-- NAVIGATION -->
+<nav>
+  <div class="logo">
+    <img src="image/newlogo.PNG" alt="MindBridge">
+  </div>
 
-  </nav>
+  <div class="menu-toggle" onclick="toggleMenu()" aria-label="Toggle navigation menu" role="button" tabindex="0">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
 
-  <!-- HEADER -->
-  <!-- <header> -->
-    <!-- <h1>MindBridge</h1> -->
-  <!-- </header> -->
+  <ul id="nav-menu">
+    <li><a href="index.php">Home</a></li>
+    <li><a href="#features">Features</a></li>
+    <li><a href="#stories">Stories</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
 
-  <!-- HERO -->
-  <section class="hero">
-    <div class="intro-text">
-      <h2>Share your story. Connect with support.</h2>
-      <p>MindBridge offers a secure place to open up about mental health, identity, or life struggles — with the option to reach professionals when you're ready.</p>
-      <button onclick="navigateToForm()">Start Your Journey</button>
-    </div>
-  </section>
+  <a href="backend/auth/logout.php">Logout</a>
+</nav>
 
-  <!-- FEATURES -->
-  <section class="features" id="features">
-    <div class="feature">
-      <a href="safe-sharing.html">
-        <img src="image/19.jpg" alt="Safe sharing" />
-        <h3>Safe Sharing</h3>
-        <p>Post anonymously or openly. Your voice matters, your comfort comes first.</p>
-      </a>
-      <a href="safe-sharing.html" class="see-more-btn">See More</a>
-    </div>
-    <!-- Coomunity support -->
-    <div class="feature">
-      <a href="community support.html">
-        <img src="image/13.jpg" alt="Community support" />
-        <h3>Community Support</h3>
-        <p>Read, relate, and respond to others on their paths — because no one heals alone.</p>
-      </a>
-      <a href="community support.html" class="see-more-btn">See More</a>
-    </div>
-    <!-- Professional Access -->
-    <div class="feature">
-      <a href="g.html.html">
-        <img src="image/22.jpg" alt="Professional support" />
-        <h3>Professional Access</h3>
-        <p>Connect with certified mental health professionals when you are ready.</p>
-      </a>
-      <a href="g.html.html" class="see-more-btn">See More</a>
-    </div>
-  </section>
+<!-- HERO -->
+<section class="hero">
+  <div class="intro-text">
+    <h2>Welcome, <?php echo htmlspecialchars($_SESSION['user_name']); ?> 👋</h2>
+    <p>
+      MindBridge offers a secure place to open up about mental health, identity,
+      or life struggles — with the option to reach professionals when you're ready.
+    </p>
+  </div>
+</section>
 
-  <!-- FOOTER -->
-  <footer>
-    <p>Your voice, your story. Join the community.</p>
-    <div class="footer-content">
-      <a href="index.html">Home</a>
-      <a href="contact.html">Contact</a>
-      <a href="login.html">Login</a>
-      <a href="g.html.html">Therapists</a>
-    </div>
-    <p class="copy">&copy; 2025 MindBridge. Empowering voices, one story at a time.</p>
-  </footer>
+<!-- STORY FORM -->
+<section id="stories" class="features">
+  <h2 style="text-align:center;">Share Your Story</h2>
 
-  <!-- JS -->
-  <script>
-    function navigateToForm() {
-      alert("Redirecting to story submission form... (feature coming soon)");
-    }
+  <form action="backend/story/store.php" method="POST" style="max-width:600px;margin:20px auto;">
+    <input type="text" name="title" placeholder="Story Title" required
+           style="width:100%;padding:10px;margin-bottom:10px;">
 
-    function toggleMenu() {
-      const menu = document.getElementById('nav-menu');
-      menu.classList.toggle('show');
-    }
+    <textarea name="content" placeholder="Write your story..."
+              rows="6" required
+              style="width:100%;padding:10px;"></textarea>
 
-    document.querySelector('.menu-toggle').addEventListener('keydown', function(e) {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        toggleMenu();
-      }
-    });
-  </script>
+    <button type="submit" style="margin-top:10px;padding:10px 20px;">
+      Post Story
+    </button>
+  </form>
+</section>
+
+<hr>
+
+<!-- STORY LIST -->
+<section class="features">
+  <h2 style="text-align:center;">Community Stories</h2>
+
+<?php
+$result = mysqli_query($conn, "
+    SELECT stories.*, users.name 
+    FROM stories 
+    JOIN users ON stories.user_id = users.id
+    ORDER BY stories.created_at DESC
+");
+
+if (mysqli_num_rows($result) === 0) {
+    echo "<p style='text-align:center;'>No stories yet.</p>";
+}
+
+while ($story = mysqli_fetch_assoc($result)) {
+    echo "<div style='max-width:700px;margin:20px auto;border-bottom:1px solid #ccc;padding-bottom:10px;'>";
+    echo "<h3>" . htmlspecialchars($story['title']) . "</h3>";
+    echo "<p>" . nl2br(htmlspecialchars($story['content'])) . "</p>";
+    echo "<small>— " . htmlspecialchars($story['name']) . "</small>";
+    echo "</div>";
+}
+?>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>Your voice, your story. Join the community.</p>
+  <div class="footer-content">
+    <a href="index.php">Home</a>
+    <a href="contact.html">Contact</a>
+  </div>
+  <p class="copy">&copy; 2025 MindBridge. Empowering voices, one story at a time.</p>
+</footer>
+
+<!-- JS -->
+<script>
+function toggleMenu() {
+  const menu = document.getElementById('nav-menu');
+  menu.classList.toggle('show');
+}
+
+document.querySelector('.menu-toggle').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' || e.key === ' ') {
+    e.preventDefault();
+    toggleMenu();
+  }
+});
+</script>
 
 </body>
 </html>
