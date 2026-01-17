@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-/* 🔒 STEP A1 — Protect page */
+/* 🔒 Protect page */
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit();
@@ -13,40 +13,27 @@ require_once "backend/config/db.php";
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MindBridge - Share. Connect. Heal.</title>
+  <title>MindBridge</title>
   <link rel="stylesheet" href="style/style.css">
 </head>
 <body>
 
-<!-- NAVIGATION -->
+<!-- NAV -->
 <nav>
-  <div class="logo">
-    <img src="image/newlogo.PNG" alt="MindBridge">
-  </div>
-
-  <div class="menu-toggle" onclick="toggleMenu()" role="button" tabindex="0">
-    <span></span><span></span><span></span>
-  </div>
-
+  <div class="logo">MindBridge</div>
   <ul id="nav-menu">
     <li><a href="index.php">Home</a></li>
     <li><a href="#stories">Stories</a></li>
     <li><a href="contact.html">Contact</a></li>
   </ul>
-
   <a href="backend/auth/logout.php">Logout</a>
+  <a href="notifications.php">🔔</a>
+
 </nav>
 
 <!-- HERO -->
 <section class="hero">
-  <div class="intro-text">
-    <h2>Welcome, <?php echo htmlspecialchars($_SESSION['user_name']); ?> 👋</h2>
-    <p>
-      MindBridge offers a secure place to open up about mental health,
-      identity, or life struggles — with the option to reach professionals.
-    </p>
-  </div>
+  <h2>Welcome, <?php echo htmlspecialchars($_SESSION['user_name']); ?> 👋</h2>
 </section>
 
 <!-- STORY FORM -->
@@ -55,6 +42,7 @@ require_once "backend/config/db.php";
 
   <form action="backend/story/store.php" method="POST"
         style="max-width:600px;margin:20px auto;">
+
     <input type="text" name="title" placeholder="Story Title" required
            style="width:100%;padding:10px;margin-bottom:10px;">
 
@@ -62,15 +50,12 @@ require_once "backend/config/db.php";
               rows="6" required
               style="width:100%;padding:10px;"></textarea>
 
-              <label>
-  <input type="checkbox" name="is_anonymous" value="1">
-  Post anonymously
-</label>
+    <label>
+      <input type="checkbox" name="is_anonymous" value="1">
+      Post anonymously
+    </label><br><br>
 
-
-    <button type="submit" style="margin-top:10px;padding:10px 20px;">
-      Post Story
-    </button>
+    <button type="submit">Post Story</button>
   </form>
 </section>
 
@@ -82,11 +67,16 @@ require_once "backend/config/db.php";
 
 <?php
 $sql = "
-  SELECT stories.id, stories.title, stories.content, stories.user_id,
-         users.name
-  FROM stories
-  JOIN users ON stories.user_id = users.id
-  ORDER BY stories.created_at DESC
+SELECT 
+    stories.*,
+    users.name,
+    (SELECT COUNT(*) FROM likes WHERE likes.story_id = stories.id) AS like_count,
+    (SELECT id FROM likes 
+     WHERE likes.story_id = stories.id 
+     AND likes.user_id = {$_SESSION['user_id']}) AS liked
+FROM stories
+JOIN users ON stories.user_id = users.id
+ORDER BY stories.created_at DESC
 ";
 
 $result = mysqli_query($conn, $sql);
@@ -96,55 +86,84 @@ if (mysqli_num_rows($result) === 0) {
 }
 
 while ($story = mysqli_fetch_assoc($result)) {
-    echo "<div style='max-width:700px;margin:20px auto;
-                  border-bottom:1px solid #ccc;padding-bottom:10px;'>";
-    
-    echo "<h3>" . htmlspecialchars($story['title']) . "</h3>";
-    echo "<p>" . nl2br(htmlspecialchars($story['content'])) . "</p>";
-    if ($story['is_anonymous']) {
-    echo "<small>— Anonymous</small>";
-} else {
-    echo "<small>— " . htmlspecialchars($story['name']) . "</small>";
-}
-
-
-    /* 🔐 STEP B — Ownership check */
-    if ((int)$story['user_id'] === (int)$_SESSION['user_id']) {
-    echo ' | <a href="backend/story/edit.php?id=' . (int)$story['id'] . '">Edit</a>';
-    echo ' | <a href="backend/story/delete.php?id=' . (int)$story['id'] . '"
-             onclick="return confirm(\'Delete this story?\')">Delete</a>';
-}
-
-
-    echo "</div>";
-}
 ?>
-</section>
+  <!-- STORY CARD -->
+  <div style="max-width:700px;margin:20px auto;border-bottom:1px solid #ccc;padding:10px;">
 
-<!-- FOOTER -->
-<footer>
-  <p>Your voice, your story. Join the community.</p>
-  <div class="footer-content">
-    <a href="index.php">Home</a>
-    <a href="contact.html">Contact</a>
+    <h3><?php echo htmlspecialchars($story['title']); ?></h3>
+
+    <p><?php echo nl2br(htmlspecialchars($story['content'])); ?></p>
+
+    <small>
+      —
+      <?php
+        echo $story['is_anonymous']
+             ? "Anonymous"
+             : htmlspecialchars($story['name']);
+      ?>
+    </small>
+
+    <!-- ❤️ LIKE -->
+    <div style="margin-top:8px;">
+      <a href="backend/story/like.php?id=<?php echo $story['id']; ?>"
+         style="text-decoration:none;font-size:18px;">
+        <?php echo $story['liked'] ? "❤️" : "🤍"; ?>
+        <?php echo $story['like_count']; ?>
+      </a>
+
+      <?php if ($story['user_id'] == $_SESSION['user_id']) { ?>
+        | <a href="backend/story/delete.php?id=<?php echo $story['id']; ?>"
+             onclick="return confirm('Delete this story?')">
+             Delete
+          </a>
+      <?php } ?>
+    </div>
+
+    <!-- ================= STEP E-3: COMMENT FORM ================= -->
+    <form action="backend/story/comment_store.php" method="POST"
+          style="margin-top:10px;">
+      <input type="hidden" name="story_id"
+             value="<?php echo $story['id']; ?>">
+
+      <input type="text" name="comment"
+             placeholder="Write a comment..."
+             required
+             style="width:70%;padding:6px;">
+
+      <button type="submit">Comment</button>
+    </form>
+
+    <!-- ================= STEP E-4: SHOW COMMENTS ================= -->
+    <?php
+    $sid = $story['id'];
+    $comments = mysqli_query($conn, "
+        SELECT comments.*, users.name
+        FROM comments
+        JOIN users ON comments.user_id = users.id
+        WHERE comments.story_id = $sid
+        ORDER BY comments.created_at ASC
+    ");
+
+    while ($c = mysqli_fetch_assoc($comments)) {
+    ?>
+      <div style="margin-left:20px;margin-top:5px;">
+        <small>
+          <b><?php echo htmlspecialchars($c['name']); ?>:</b>
+          <?php echo htmlspecialchars($c['comment']); ?>
+        </small>
+
+        <?php if ($c['user_id'] == $_SESSION['user_id']) { ?>
+  <a href="backend/story/comment_edit.php?id=<?php echo $c['id']; ?>">✏️</a>
+  <a href="backend/story/comment_delete.php?id=<?php echo $c['id']; ?>"
+     onclick="return confirm('Delete comment?')">❌</a>
+<?php } ?>
+
+      </div>
+    <?php } ?>
+
   </div>
-  <p class="copy">&copy; 2025 MindBridge</p>
-</footer>
-
-<!-- JS -->
-<script>
-function toggleMenu() {
-  document.getElementById('nav-menu').classList.toggle('show');
-}
-
-document.querySelector('.menu-toggle')
-  .addEventListener('keydown', function(e) {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      toggleMenu();
-    }
-  });
-</script>
+<?php } ?>
+</section>
 
 </body>
 </html>
